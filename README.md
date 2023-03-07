@@ -38,10 +38,15 @@ You can also use reload but not with workers. For auto-reload.
 
 ## Tools  
 
-Starlette fo Session, Caching and Cookies
-FastAPI for fast docs (OpenAPI)
-Uvicorn for ASGI server
-Might have to use Gunicorn as well for WSGI (production level)  
+- Starlette fo Session, Caching and Cookies  
+
+- FastAPI for fast docs (OpenAPI)  
+
+- Uvicorn for ASGI server  
+
+- Might have to use Gunicorn as well for WSGI (production level)  
+
+
 
 ## Endpoints
 Please see localhost:8000/docs to check endpoints  
