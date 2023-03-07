@@ -2,7 +2,7 @@ import os
 from typing import Dict, List
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from starlette.middleware.sessions import SessionMiddleware
 from pydantic import BaseModel
 import spotipy
@@ -40,19 +40,9 @@ async def playlists(request: Request):
 
     token_info = TokenInfo(**request.session["token_info"])
     spotify = get_spotify(token_info)
-    all_playlists = spotify.current_user_playlists()
-    playlists_info = get_playlists_info(spotify, all_playlists["items"])
+    playlist_info = get_playlists_info(spotify, spotify.current_user_playlists()['items'])
 
-    html = "<h2>My playlists:</h2>"
-    for _, playlist in playlists_info.items():
-        html += f"<h3>{playlist['name']}</h3>"
-        html += "<ul>"
-        for track in playlist["tracks"]["items"]:
-            html += f"<li>{track['track']['name']}</li>"
-        html += "</ul>"
-
-    html += "<h2><a href='/logout'>Sign out</a></h2>"
-    return html
+    return JSONResponse(content=playlist_info)
 
 
 def get_spotify(token_info: TokenInfo) -> spotipy.Spotify:
@@ -81,7 +71,7 @@ async def logout(request: Request, response: Response):
 async def callback(request: Request):
     code = request.query_params.get("code")
     if code:
-        token_info = sp_oauth.get_access_token(code)
+        token_info = sp_oauth.get_cached_token()
         request.session["token_info"] = token_info
         response = HTMLResponse(content="<h2>Login successful!</h2>")
         response.headers["location"] = "/playlists"
@@ -94,13 +84,6 @@ async def callback(request: Request):
 def show_login_link() -> str:
     auth_url = sp_oauth.get_authorize_url()
     return f'<h2><a href="{auth_url}">Sign in</a></h2>'
-
-
-def get_playlists_html(token_info: TokenInfo) -> str:
-    spotify = get_spotify(token_info)
-    all_playlists = spotify.current_user_playlists()
-    playlists_info = get_playlists_info(spotify, all_playlists["items"])
-    return show_playlists(playlists_info)
 
 
 def get_playlists_info(spotify: spotipy.Spotify, playlists: List[Dict]) -> Dict[int, Dict]:
