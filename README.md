@@ -2,7 +2,10 @@
 
 --- NO TEST COVERAGE ---  *not implemented yet. :crying_cat_face:
 
-## Please make sure you install all the dependecies : [spotipy, fastapi, and etc.]. See the requirements.txt.
+## Please make sure you install all the dependecies : [spotipy, fastapi, and etc.].  
+See the requirements.txt.  
+
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
@@ -18,27 +21,31 @@ To run this project, you will need to add the following environment variables to
 Start the server
 
 ```bash
-  uvicorn main:app --env-file="./env"  
+    uvicorn main:app --env-file="./env"  
 ```
 Please note that in this case, if you use reload=True or workers=NUM, you should put uvicorn.run into `if __name__ == '__main__'` clause in the main module
 ```bash
     uvicorn.run("main:app", port=5000, reload=True, access_log=False)
 ```
 ```bash
-  uvicorn main:app --env-file="./env"  --workers=4
-```
+    uvicorn main:app --env-file="./env"  --workers=4
+```  
+
 You can also use reload but not with workers. For auto-reload. 
 ```bash
-  uvicorn main:app --env-file="./env"  --reload
+    uvicorn main:app --env-file="./env"  --reload
 ```
 
-## Tools 
+## Tools  
+
 Starlette fo Session, Caching and Cookies
 FastAPI for fast docs (OpenAPI)
 Uvicorn for ASGI server
-Might have to use Gunicorn as well for WSGI (production level)
+Might have to use Gunicorn as well for WSGI (production level)  
+
 ## Endpoints
-Please see localhost:8000/docs to check endpoints
+Please see localhost:8000/docs to check endpoints  
+
 ```bash
     localhost:8000/docs
 ```
