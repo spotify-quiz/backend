@@ -2,13 +2,16 @@
 
 --- NO TEST COVERAGE ---  *not implemented yet. :crying_cat_face:
 
+## Please make sure you install all the dependecies : [spotipy, fastapi, and etc.]. See the requirements.txt.
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`SPOTIPY_CLIENT_ID`
-`SPOTIPY_CLIENT_SECRET`
-`SPOTIPY_REDIRECT_URI` 
+`SPOTIPY_CLIENT_ID`  
+
+`SPOTIPY_CLIENT_SECRET`  
+
+`SPOTIPY_REDIRECT_URI`  
 
 ## How to run this locally
 
