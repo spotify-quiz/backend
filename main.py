@@ -76,9 +76,7 @@ async def callback(request: Request):
     if code:
         token_info = sp_oauth.get_access_token(code)
         request.session["token_info"] = token_info
-        response = HTMLResponse(content="<h2>Login successful!</h2>")
-        response.headers["location"] = "/playlists"
-        response.status_code = 303
+        return JSONResponse(content=token_info)
     else:
         response = HTMLResponse(content="<h2>Login failed.</h2>")
     return response
