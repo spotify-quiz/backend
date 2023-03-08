@@ -13,7 +13,9 @@ load_dotenv()
 
 app = FastAPI()
 
-app.add_middleware(SessionMiddleware, secret_key=os.urandom(64), session_cookie="session")
+app.add_middleware(
+    SessionMiddleware, secret_key=os.urandom(64), session_cookie="session"
+)
 
 
 class TokenInfo(BaseModel):
@@ -37,10 +39,11 @@ async def root():
 async def playlists(request: Request):
     if "token_info" not in request.session:
         return RedirectResponse(url="/login")
-
     token_info = TokenInfo(**request.session["token_info"])
     spotify = get_spotify(token_info)
-    playlist_info = get_playlists_info(spotify, spotify.current_user_playlists()['items'])
+    playlist_info = get_playlists_info(
+        spotify, spotify.current_user_playlists()["items"]
+    )
 
     return JSONResponse(content=playlist_info)
 
@@ -71,7 +74,7 @@ async def logout(request: Request, response: Response):
 async def callback(request: Request):
     code = request.query_params.get("code")
     if code:
-        token_info = sp_oauth.get_cached_token()
+        token_info = sp_oauth.get_access_token(code)
         request.session["token_info"] = token_info
         response = HTMLResponse(content="<h2>Login successful!</h2>")
         response.headers["location"] = "/playlists"
@@ -86,12 +89,14 @@ def show_login_link() -> str:
     return f'<h2><a href="{auth_url}">Sign in</a></h2>'
 
 
-def get_playlists_info(spotify: spotipy.Spotify, playlists: List[Dict]) -> Dict[int, Dict]:
+def get_playlists_info(
+    spotify: spotipy.Spotify, playlists: List[Dict]
+) -> Dict[int, Dict]:
     ret = {}
     for i, playlist in enumerate(playlists):
         ret[i] = spotify.playlist(
             playlist["id"],
-            fields="images,name,tracks.items(track(name))",
+            fields="images,name,tracks.items(track(name,preview_url,album(images)))",
         )
     return ret
 
